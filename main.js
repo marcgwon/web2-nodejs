@@ -1,16 +1,18 @@
 var http = require("http");
 var fs = require("fs");
-var app = http.createServer(function(request, response) {
-  var url = request.url;
-  if (request.url == "/") {
-    url = "/index.html";
+var url = require("url");
+
+var app = http.createServer(function(req, res) {
+  var _url = req.url;
+  var queryData = url.parse(_url, true).query;
+  console.log(queryData.id);
+  if (_url == "/") {
+    _url = "/index.html";
   }
-  if (request.url == "/favicon.ico") {
-    response.writeHead(404);
-    response.end();
-    return;
+  if (_url == "/favicon.ico") {
+    return res.writeHead(404);
   }
-  response.writeHead(200);
-  response.end(fs.readFileSync(__dirname + url));
+  res.writeHead(200);
+  res.end(queryData.id);
 });
 app.listen(3000);
